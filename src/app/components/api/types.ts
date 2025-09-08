@@ -16,58 +16,119 @@ export interface ErrorResponse {
 
 // AI Analysis Types
 export interface SentimentAnalysis {
+  task: string;
   sentiment_score: number;
   sentiment_label: string;
   confidence: number;
   key_reasons: string[];
-  keywords: string[];
+  keywords: {
+    positive: string[];
+    negative: string[];
+  };
   used_fields: string[];
 }
 
 export interface SentimentAnalysisResponse {
   article_id: number;
-  analysis: SentimentAnalysis;
+  sentiment_score: number;
+  sentiment_label: string;
+  confidence: number;
+  key_reasons: string[];
+  keywords: {
+    positive: string[];
+    negative: string[];
+  };
+  used_fields: string[];
+  model_version: string;
   created_at: string;
+  updated_at: string;
+}
+
+export interface EventItem {
+  label: string;
+  confidence: number;
 }
 
 export interface EventAnalysis {
-  events: string[];
-  event_summary: string;
-  severity: string;
+  task: string;
+  events: EventItem[];
   primary_event: string;
+  event_summary: string;
+  severity: number;
+  market_impact_timeframe: string;
   used_fields: string[];
 }
 
 export interface EventAnalysisResponse {
   article_id: number;
-  analysis: EventAnalysis;
+  events: EventItem[];
+  event_summary: string;
+  severity: number;
+  primary_event_type: string;
+  used_fields: string[];
+  model_version: string;
   created_at: string;
+  updated_at: string;
+}
+
+export interface TradingSignals {
+  news_breakout: boolean;
+  sentiment_divergence: boolean;
+  event_momentum: boolean;
+  risk_catalyst: boolean;
 }
 
 export interface TradingSignalAnalysis {
-  signals: string[];
+  task: string;
+  signals: TradingSignals;
   action: string;
   time_horizon: string;
-  risk_level: string;
+  risk_level: number;
+  priority_score: number;
   rationale: string;
   checklist: string[];
-  priority_score: number;
+  stop_loss_suggestion: string;
+  take_profit_suggestion: string;
   used_fields: string[];
 }
 
 export interface TradingSignalResponse {
   article_id: number;
-  analysis: TradingSignalAnalysis;
+  signals: TradingSignals;
+  action: string;
+  time_horizon: string;
+  risk_level: number;
+  rationale: string;
+  checklist: string[];
+  priority_score: number;
+  used_fields: string[];
+  model_version: string;
   created_at: string;
+  updated_at: string;
 }
 
+// Extended Article Response (from getArticle API)
 export interface ArticleResponse {
   id: number;
+  source_id: number;
+  guid: string;
+  link: string;
   title: string;
   description: string;
+  content_html: string;
   content_text: string;
-  published_at: string;
+  author: string;
+  categories: string[];
+  pub_date: string;
+  feed_language: string;
+  hash: string;
+  first_seen_at: string;
   sources: Source;
+  analysis?: {
+    sentiment?: SentimentAnalysisResponse;
+    events?: EventAnalysisResponse;
+    strategy?: TradingSignalResponse;
+  };
 }
 
 // Articles Management Types

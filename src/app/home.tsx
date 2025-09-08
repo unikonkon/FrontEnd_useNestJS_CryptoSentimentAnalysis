@@ -2,18 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import { articlesService } from './components/api';
-import type { Article, SingleArticleResponse } from './components/api';
-import WalletBG, { CompactBitcoinModel } from './components/treeJS/walletBG';
+import type { Article } from './components/api';
+import WalletBG from './components/treeJS/walletBG';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [selectedArticle, setSelectedArticle] = useState<SingleArticleResponse['data'] | null>(null);
   const [loading, setLoading] = useState(true);
   const [ingestLoading, setIngestLoading] = useState(false);
-  const [articleLoading, setArticleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+  const router = useRouter();
   // Load articles on component mount
   useEffect(() => {
     loadArticles();
@@ -23,9 +22,9 @@ export default function HomePage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await articlesService.getFilteredArticles({ 
+      const response = await articlesService.getFilteredArticles({
         limit: '5',
-        offset: '0' 
+        offset: '0'
       });
       setArticles(response.data);
     } catch (err) {
@@ -41,10 +40,10 @@ export default function HomePage() {
       setIngestLoading(true);
       setError(null);
       setSuccessMessage(null);
-      
+
       await articlesService.ingestCoinDeskArticles();
       setSuccessMessage('นำเข้าบทความจาก CoinDesk สำเร็จแล้ว');
-      
+
       // Reload articles after successful ingest
       await loadArticles();
     } catch (err) {
@@ -55,23 +54,9 @@ export default function HomePage() {
     }
   };
 
-  const handleViewArticle = async (articleId: number) => {
-    try {
-      setArticleLoading(true);
-      setError(null);
-      
-      const response = await articlesService.getArticleById(articleId);
-      setSelectedArticle(response.data);
-    } catch (err) {
-      console.error('Failed to load article details:', err);
-      setError('ไม่สามารถโหลดรายละเอียดบทความได้');
-    } finally {
-      setArticleLoading(false);
-    }
-  };
-
-  const handleCloseArticle = () => {
-    setSelectedArticle(null);
+  const handleViewArticle = (articleId: number) => {
+    // Navigate to analysis page with article ID
+    router.push(`/analysis/${articleId}`);
   };
 
   const clearMessages = () => {
@@ -96,28 +81,9 @@ export default function HomePage() {
       <header className="bg-gray-900 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-white">
-                Crypto Sentiment Analysis
-              </h1>
-            <button
-              onClick={handleIngestArticles}
-              disabled={ingestLoading}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
-            >
-              {ingestLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  กำลังนำเข้า...
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  นำเข้าบทความจาก CoinDesk
-                </>
-              )}
-            </button>
+            <h1 className="text-3xl font-bold text-white">
+              Crypto Sentiment Analysis
+            </h1>
           </div>
         </div>
       </header>
@@ -133,25 +99,42 @@ export default function HomePage() {
                 <span className="text-yellow-400">Crypto</span> ด้วย AI
               </h2>
               <p className="text-xl text-gray-300 mb-6">
-                ติดตามและวิเคราะห์ข่าวสาร Cryptocurrency ด้วยเทคโนโลยี AI 
+                ติดตามและวิเคราะห์ข่าวสาร Cryptocurrency ด้วยเทคโนโลยี AI
                 เพื่อการตัดสินใจลงทุนที่ดีขึ้น
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center gap-2">
                   <div className="text-2xl font-bold text-yellow-400">{articles.length}</div>
                   <div className="text-sm text-gray-300">บทความทั้งหมด</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-2xl font-bold text-green-400">AI</div>
-                  <div className="text-sm text-gray-300">วิเคราะห์อัตโนมัติ</div>
+                <div className="p-4">
+                  <button
+                    onClick={handleIngestArticles}
+                    disabled={ingestLoading}
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                  >
+                    {ingestLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        กำลังนำเข้า...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        นำเข้าบทความจาก CoinDesk
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
-            
+
             {/* 3D Bitcoin Model */}
             <div className="flex justify-center">
-              <WalletBG 
-                height="300px" 
+              <WalletBG
+                height="300px"
                 className="w-full max-w-md rounded-xl shadow-2xl bg-gradient-to-br from-black/20 to-transparent backdrop-blur-sm"
                 showControls={true}
               />
@@ -212,24 +195,23 @@ export default function HomePage() {
                       {new Date(article.pub_date).toLocaleDateString('th-TH')}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
                     {article.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
                     {article.description}
                   </p>
-                  
+
                   <div className="flex justify-between items-center">
                     <button
                       onClick={() => handleViewArticle(article.id)}
-                      disabled={articleLoading}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200"
                     >
-                      {articleLoading ? 'กำลังโหลด...' : 'อ่านเพิ่มเติม'}
+                      ดูข้อมูลวิเคราะห์
                     </button>
-                    
+
                     {article.link && (
                       <a
                         href={article.link}
@@ -248,60 +230,6 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Article Detail Modal */}
-      {selectedArticle && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white pr-4">
-                  {selectedArticle.title}
-                </h2>
-                <button
-                  onClick={handleCloseArticle}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
-                <span className="bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded">
-                  {selectedArticle.sources.name}
-                </span>
-                <span>{new Date(selectedArticle.pub_date).toLocaleDateString('th-TH')}</span>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">คำอธิบาย</h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  {selectedArticle.description}
-                </p>
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">เนื้อหาบทความ</h3>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                    {selectedArticle.content_text}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex justify-end gap-3 pt-4 border-t">
-                <button
-                  onClick={handleCloseArticle}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                >
-                  ปิด
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

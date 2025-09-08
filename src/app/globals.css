@@ -84,3 +84,58 @@ canvas {
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
 }
+
+/* Analysis page specific styles */
+.analysis-card {
+  transition: all 0.3s ease;
+}
+
+.analysis-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Sentiment color indicators */
+.sentiment-positive {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.sentiment-negative {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.sentiment-neutral {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+/* Analysis button animations */
+.analysis-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.analysis-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.analysis-btn:hover::before {
+  left: 100%;
+}
+
+/* Progress indicators */
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring circle {
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
