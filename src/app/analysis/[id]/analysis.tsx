@@ -364,10 +364,10 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
 
     if (articleLoading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-screen bg-background flex items-center justify-center crt">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-foreground mx-auto mb-4"></div>
-                    <p className="text-foreground">กำลังโหลดบทความ...</p>
+                    <div className="loading-spinner mx-auto mb-4"></div>
+                    <p className="text-foreground font-pixel-body text-pixel-lg animate-pixel-blink">กำลังโหลดบทความ...</p>
                 </div>
             </div>
         );
@@ -375,46 +375,46 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
 
     if (!article) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-screen bg-background flex items-center justify-center crt">
                 <div className="text-center">
-                    <h2 className="text-2xl font-bold text-foreground mb-4">ไม่พบบทความ</h2>
-                    <button
-                        onClick={() => router.push('/')}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-                    >
-                        กลับหน้าหลัก
-                    </button>
+                    <div className="card-pixel max-w-md">
+                        <h2 className="font-pixel-title text-pixel-lg text-p8-8 mb-4">ไม่พบบทความ</h2>
+                        <button
+                            onClick={() => router.push('/')}
+                            className="btn-pixel"
+                        >
+                            กลับหน้าหลัก
+                        </button>
+                    </div>
                 </div>
             </div>
         );
     }
 
     const getSentimentColor = (label: string) => {
-        switch (label.toLowerCase()) {
-            case 'positive': return 'text-green-600 bg-green-100';
-            case 'negative': return 'text-red-600 bg-red-100';
-            case 'neutral': return 'text-gray-600 bg-gray-100';
-            default: return 'text-blue-600 bg-blue-100';
+        switch (label) {
+            case 'positive': return 'sentiment-positive';
+            case 'negative': return 'sentiment-negative';
+            case 'neutral': return 'sentiment-neutral';
+            default: return 'bg-p8-12 text-p8-7 border-2 border-p8-6';
         }
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground crt">
             {/* Header */}
-            <header className="bg-gray-900 shadow-lg">
+            <header className="bg-p8-1 border-b-4 border-p8-6 pixel-corners" style={{"--pc": "12px"} as React.CSSProperties}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={() => router.push('/')}
-                                className="text-white hover:text-gray-300 transition-colors"
+                                className="text-p8-10 hover:text-p8-12 transition-colors font-pixel-title text-pixel-lg hover:scale-110"
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
+                                ←
                             </button>
-                            <h1 className="text-2xl font-bold text-white">
-                                AI Analysis - บทความ #{articleId}
+                            <h1 className="font-pixel-title text-pixel-lg text-p8-10 pt-4">
+                                AI ANALYSIS #{articleId}
                             </h1>
                         </div>
                     </div>
@@ -424,12 +424,13 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
             {/* Error Message */}
             {error && (
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex justify-between items-center">
-                        <span>{error}</span>
-                        <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                    <div className="toast-pixel error mb-4 flex justify-between items-center">
+                        <span className="font-pixel-body text-pixel-sm">{error}</span>
+                        <button 
+                            onClick={() => setError(null)} 
+                            className="text-p8-8 hover:text-p8-9 font-pixel-title text-pixel-xs ml-4"
+                        >
+                            X
                         </button>
                     </div>
                 </div>
@@ -437,57 +438,54 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Article Information */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+                <div className="card-pixel mb-8">
                     <div className="flex items-center gap-4 mb-4">
-                        <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded">
+                        <span className="badge-pixel bg-p8-12">
                             {article.sources.name}
                         </span>
-                        <span className="text-gray-500 text-sm">
+                        <span className="font-pixel-body text-pixel-xs text-p8-6">
                             {new Date(article.pub_date).toLocaleDateString('th-TH')}
                         </span>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    <h2 className="font-pixel-title text-pixel-lg text-p8-7 mb-4">
                         {article.title}
                     </h2>
 
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">
+                    <p className="font-pixel-body text-pixel-base text-p8-6 mb-4">
                         {article.description}
                     </p>
 
                     {/* Article metadata */}
                     <div className="flex flex-wrap gap-2 mb-4">
                         {article.author && (
-                            <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                            <span className="badge-pixel bg-p8-5 text-p8-7">
                                 👤 {article.author}
                             </span>
                         )}
                         {article.categories && article.categories.map((category, index) => (
-                            <span key={index} className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">
+                            <span key={index} className="badge-pixel bg-p8-13 text-p8-7">
                                 {category}
                             </span>
                         ))}
                     </div>
 
-                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="panel-pixel">
                         <div className="flex justify-between items-center mb-2">
-                            <h3 className="font-semibold text-gray-900 dark:text-white">เนื้อหาบทความ</h3>
+                            <h3 className="font-pixel-title text-pixel-sm text-p8-7">เนื้อหาบทความ</h3>
                             {article.link && (
                                 <a
                                     href={article.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
+                                    className="font-pixel-body text-pixel-xs text-p8-12 hover:text-p8-10"
                                 >
-                                    อ่านบทความต้นฉบับ
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
+                                    อ่านบทความต้นฉบับ →
                                 </a>
                             )}
                         </div>
-                        <div className="prose dark:prose-invert max-w-none">
-                            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">
+                        <div className="prose max-w-none">
+                            <p className="font-pixel-body text-pixel-sm text-p8-6 whitespace-pre-wrap">
                                 {article.content_text}
                             </p>
                         </div>
@@ -495,8 +493,8 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
                 </div>
 
                 {/* Analysis Controls */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                <div className="card-pixel mb-8">
+                    <h3 className="font-pixel-title text-pixel-lg text-p8-10 mb-6">
                         วิเคราะห์ด้วย AI
                     </h3>
 
@@ -504,59 +502,51 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
                         <button
                             onClick={handleSentimentAnalysis}
                             disabled={sentimentLoading}
-                            className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="btn-pixel-success flex items-center justify-center"
                         >
                             {sentimentLoading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <div className="loading-spinner w-14 h-14"></div>
                             ) : (
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <span className="text-3xl w-12 h-12">☺</span>
                             )}
-                            Sentiment Analysis
+                            SENTIMENT
                         </button>
 
                         <button
                             onClick={handleEventAnalysis}
                             disabled={eventLoading}
-                            className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="btn-pixel-secondary flex items-center justify-center"
                         >
                             {eventLoading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <div className="loading-spinner w-14 h-14"></div>
                             ) : (
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                </svg>
+                                <span className="text-3xl w-12 h-12">⚙ </span>
                             )}
-                            Event Analysis
+                            EVENT
                         </button>
 
                         <button
                             onClick={handleTradingSignals}
                             disabled={tradingLoading}
-                            className="bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="btn-pixel-event flex items-center justify-center gap-2"
                         >
                             {tradingLoading ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <div className="loading-spinner w-4 h-4"></div>
                             ) : (
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
+                                <span>↑</span>
                             )}
-                            Trading Signals
+                            TRADING
                         </button>
 
                         <button
                             onClick={handleAnalyzeAll}
                             disabled={sentimentLoading || eventLoading || tradingLoading}
-                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                            className="btn-pixel flex items-center justify-center"
                         >
                             {(sentimentLoading || eventLoading || tradingLoading) ? (
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <div className="loading-spinner w-14 h-14"></div>
                             ) : (
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <span className="text-3xl w-12 h-12">✓</span>
                             )}
                             วิเคราะห์ทั้งหมด
                         </button>
@@ -567,71 +557,73 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
                 <div className="space-y-8">
                     {/* Sentiment Analysis Results */}
                     {sentimentAnalysis && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Sentiment Analysis
+                        <div className="card-pixel border-b-4 border-p8-6 pixel-corners pb-4">
+                            <h3 className="font-pixel-title text-pixel-lg text-p8-11 mb-4 flex items-center gap-2">
+                                <span>☺</span>
+                                SENTIMENT ANALYSIS
                             </h3>
 
                             <div className="grid md:grid-cols-3 gap-4 mb-4">
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Sentiment Score</div>
-                                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        {sentimentAnalysis.sentiment_score.toFixed(2)}
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">SENTIMENT SCORE</div>
+                                    <div className="font-pixel-title text-pixel-lg text-p8-10">
+                                        {sentimentAnalysis.sentiment_score}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Sentiment Label</div>
-                                    <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getSentimentColor(sentimentAnalysis.sentiment_label)}`}>
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">SENTIMENT LABEL</div>
+                                    <div className={`inline-block px-3 py-1 font-pixel-title text-pixel-xs ${getSentimentColor(sentimentAnalysis.sentiment_label)}`}>
                                         {sentimentAnalysis.sentiment_label}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Confidence</div>
-                                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        {(sentimentAnalysis.confidence * 100).toFixed(1)}%
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">CONFIDENCE</div>
+                                    <div className="font-pixel-title text-pixel-lg text-p8-10">
+                                        {(sentimentAnalysis.confidence * 100)}%
                                     </div>
                                 </div>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Key Reasons</h4>
+                                    <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">KEY REASONS</h4>
                                     <ul className="space-y-1">
-                                        {sentimentAnalysis.key_reasons.map((reason, index) => (
-                                            <li key={index} className="text-gray-700 dark:text-gray-300 text-sm flex items-start gap-2">
-                                                <span className="text-green-500 mt-1">•</span>
-                                                {reason}
-                                            </li>
-                                        ))}
+                                        {Array.isArray(sentimentAnalysis.key_reasons) && sentimentAnalysis.key_reasons.length > 0 ? (
+                                            sentimentAnalysis.key_reasons.map((reason, index) => (
+                                                <li key={index} className="font-pixel-body text-pixel-sm text-p8-6 flex items-start gap-2">
+                                                    <span className="text-p8-11 mt-1">•</span>
+                                                    {reason}
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="font-pixel-body text-pixel-sm text-p8-6">No key reasons available.</li>
+                                        )}
                                     </ul>
                                 </div>
 
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Keywords</h4>
+                                    <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">KEYWORDS</h4>
                                     <div className="space-y-3">
-                                        {sentimentAnalysis.keywords.positive.length > 0 && (
+                                        {Array.isArray(sentimentAnalysis.keywords?.positive) && sentimentAnalysis.keywords.positive.length > 0 && (
                                             <div>
-                                                <h5 className="text-sm font-medium text-green-700 dark:text-green-400 mb-1">Positive Keywords</h5>
+                                                <h5 className="font-pixel-body text-pixel-xs text-p8-11 mb-1">POSITIVE KEYWORDS</h5>
                                                 <div className="flex flex-wrap gap-2">
                                                     {sentimentAnalysis.keywords.positive.map((keyword, index) => (
-                                                        <span key={index} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                                        <span key={index} className="badge-pixel bg-p8-11 text-p8-0">
                                                             {keyword}
                                                         </span>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
-                                        {sentimentAnalysis.keywords.negative.length > 0 && (
+                                        {Array.isArray(sentimentAnalysis.keywords?.negative) && sentimentAnalysis.keywords.negative.length > 0 && (
                                             <div>
-                                                <h5 className="text-sm font-medium text-red-700 dark:text-red-400 mb-1">Negative Keywords</h5>
+                                                <h5 className="font-pixel-body text-pixel-xs text-p8-8 mb-1">NEGATIVE KEYWORDS</h5>
                                                 <div className="flex flex-wrap gap-2">
                                                     {sentimentAnalysis.keywords.negative.map((keyword, index) => (
-                                                        <span key={index} className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                                        <span key={index} className="badge-pixel bg-p8-8 text-p8-7">
                                                             {keyword}
                                                         </span>
                                                     ))}
@@ -646,50 +638,54 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
 
                     {/* Event Analysis Results */}
                     {eventAnalysis && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                </svg>
-                                Event Analysis
+                        <div className="card-pixel border-b-4 border-p8-6 pixel-corners pb-4">
+                            <h3 className="font-pixel-title text-pixel-lg text-p8-14 mb-4 flex items-center gap-2">
+                                <span>⚙</span>
+                                EVENT ANALYSIS
                             </h3>
 
                             <div className="grid md:grid-cols-2 gap-4 mb-4">
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Primary Event</div>
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">PRIMARY EVENT</div>
+                                    <div className="font-pixel-title text-pixel-sm text-p8-10">
                                         {eventAnalysis.primary_event_type}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Severity</div>
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                                        {eventAnalysis.severity.toFixed(1)}/1.0
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">SEVERITY</div>
+                                    <div className="font-pixel-title text-pixel-sm text-p8-10">
+                                        {eventAnalysis.severity}/1.0
                                     </div>
                                 </div>
                             </div>
 
                             <div className="mb-4">
-                                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Event Summary</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">EVENT SUMMARY</h4>
+                                <p className="font-pixel-body text-pixel-sm text-p8-6">
                                     {eventAnalysis.event_summary}
                                 </p>
                             </div>
 
                             <div>
-                                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Detected Events</h4>
+                                <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">DETECTED EVENTS</h4>
                                 <div className="space-y-2">
-                                    {eventAnalysis.events.map((event, index) => (
-                                        <div key={index} className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 flex justify-between items-center">
-                                            <span className="text-purple-800 dark:text-purple-200 font-medium">
-                                                {event.label}
-                                            </span>
-                                            <span className="text-sm text-purple-600 dark:text-purple-400">
-                                                {(event.confidence * 100).toFixed(0)}% confidence
-                                            </span>
+                                    {Array.isArray(eventAnalysis.events) && eventAnalysis.events.length > 0 ? (
+                                        eventAnalysis.events.map((event, index) => (
+                                            <div key={index} className="panel-pixel flex justify-between items-center">
+                                                <span className="font-pixel-body text-pixel-sm text-p8-14">
+                                                    {event.label}
+                                                </span>
+                                                <span className="font-pixel-body text-pixel-xs text-p8-6">
+                                                    {(event.confidence * 100)}% CONFIDENCE
+                                                </span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="font-pixel-body text-pixel-xs text-p8-6">
+                                            No events detected.
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -697,75 +693,76 @@ export default function AnalysisPage({ articleId }: AnalysisPageProps) {
 
                     {/* Trading Signals Results */}
                     {tradingSignals && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
-                                Trading Signals
+                        <div className="card-pixel">
+                            <h3 className="font-pixel-title text-pixel-lg text-p8-9 mb-4 flex items-center gap-2">
+                                <span>↑</span>
+                                TRADING SIGNALS
                             </h3>
 
                             <div className="grid md:grid-cols-4 gap-4 mb-4">
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Action</div>
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">ACTION</div>
+                                    <div className="font-pixel-title text-pixel-sm text-p8-10">
                                         {tradingSignals.action}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Time Horizon</div>
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">TIME HORIZON</div>
+                                    <div className="font-pixel-title text-pixel-sm text-p8-10">
                                         {tradingSignals.time_horizon}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Risk Level</div>
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">RISK LEVEL</div>
+                                    <div className="font-pixel-title text-pixel-sm text-p8-10">
                                         {tradingSignals.risk_level}/5
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">Priority Score</div>
-                                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                                        {tradingSignals.priority_score.toFixed(1)}/1.0
+                                <div className="panel-pixel">
+                                    <div className="font-pixel-body text-pixel-xs text-p8-6">PRIORITY SCORE</div>
+                                    <div className="font-pixel-title text-pixel-lg text-p8-10">
+                                        {tradingSignals.priority_score}/1.0
                                     </div>
                                 </div>
                             </div>
 
                             <div className="mb-4">
-                                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Rationale</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">RATIONALE</h4>
+                                <p className="font-pixel-body text-pixel-sm text-p8-6">
                                     {tradingSignals.rationale}
                                 </p>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Trading Signals</h4>
+                                    <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-3">TRADING SIGNALS</h4>
                                     <div className="space-y-2">
-                                        {Object.entries(tradingSignals.signals).map(([key, value]) => (
-                                            <div key={key} className="flex justify-between items-center bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                                                <span className="text-gray-700 dark:text-gray-300 font-medium capitalize">
-                                                    {key.replace('_', ' ')}
-                                                </span>
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${value ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                    }`}>
-                                                    {value ? 'Active' : 'Inactive'}
-                                                </span>
-                                            </div>
-                                        ))}
+                                        {tradingSignals.signals && typeof tradingSignals.signals === 'object'
+                                            ? Object.entries(tradingSignals.signals).map(([key, value]) => (
+                                                <div key={key} className="panel-pixel flex justify-between items-center">
+                                                    <span className="font-pixel-body text-pixel-sm text-p8-6">
+                                                        {key.replace('_', ' ')}
+                                                    </span>
+                                                    <span className={`badge-pixel ${value ? 'bg-p8-11 text-p8-0' : 'bg-p8-8 text-p8-7'
+                                                        }`}>
+                                                        {value ? 'ACTIVE' : 'INACTIVE'}
+                                                    </span>
+                                                </div>
+                                            ))
+                                            : <div className="font-pixel-body text-pixel-sm text-p8-6">No trading signals available.</div>
+                                        }
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Action Checklist</h4>
+                                    <h4 className="font-pixel-title text-pixel-sm text-p8-7 mb-2">ACTION CHECKLIST</h4>
                                     <ul className="space-y-1">
-                                        {tradingSignals.checklist.map((item, index) => (
-                                            <li key={index} className="text-gray-700 dark:text-gray-300 text-sm flex items-start gap-2">
-                                                <span className="text-green-500 mt-1">✓</span>
+                                        {Array.isArray(tradingSignals.checklist) && tradingSignals.checklist.map((item, index) => (
+                                            <li key={index} className="font-pixel-body text-pixel-sm text-p8-6 flex items-start gap-2">
+                                                <span className="text-p8-11 mt-1">✓</span>
                                                 {item}
                                             </li>
                                         ))}

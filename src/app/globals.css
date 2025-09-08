@@ -1,31 +1,274 @@
 @import "tailwindcss";
 
+/* 8-Bit Theme Global Styles */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* PICO-8 Color Palette Variables */
+  --p8-0: #1f1e1e;  /* Black */
+  --p8-1: #1d2b53;  /* Dark Blue */
+  --p8-2: #7e2553;  /* Dark Purple */
+  --p8-3: #008751;  /* Dark Green */
+  --p8-4: #ab5236;  /* Brown */
+  --p8-5: #5f574f;  /* Dark Grey */
+  --p8-6: #c2c3c7;  /* Light Grey */
+  --p8-7: #fff1e8;  /* White */
+  --p8-8: #ff004d;  /* Red */
+  --p8-9: #ffa300;  /* Orange */
+  --p8-10: #ffec27; /* Yellow */
+  --p8-11: #00e436; /* Green */
+  --p8-12: #29adff; /* Blue */
+  --p8-13: #83769c; /* Indigo */
+  --p8-14: #ff77a8; /* Pink */
+  --p8-15: #ffccaa; /* Peach */
+
+  /* Theme semantic colors */
+  --background: var(--p8-0);
+  --background-dark: var(--p8-1);
+  --background-panel: var(--p8-5);
+  --foreground: var(--p8-7);
+  --foreground-muted: var(--p8-6);
+  --primary: var(--p8-12);
+  --secondary: var(--p8-14);
+  --accent: var(--p8-10);
+  --success: var(--p8-11);
+  --warning: var(--p8-9);
+  --error: var(--p8-8);
+  --border: var(--p8-6);
+  --border-dark: var(--p8-5);
+
+  /* Pixel corner radius variable */
+  --pc: 8px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-pixel-body: var(--font-pixel-body);
+  --font-pixel-title: var(--font-pixel-title);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base styles with 8-bit aesthetics */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  image-rendering: pixelated;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Additional utilities for the home page */
+/* CRT Scanlines Effect for body */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 1px
+    );
+  pointer-events: none;
+  z-index: 1000;
+  animation: scanlines 0.1s linear infinite;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 0px var(--p8-1);
+}
+
+h1 { font-size: 24px; line-height: 32px; }
+h2 { font-size: 20px; line-height: 28px; }
+h3 { font-size: 16px; line-height: 24px; }
+h4 { font-size: 14px; line-height: 20px; }
+h5 { font-size: 12px; line-height: 18px; }
+h6 { font-size: 10px; line-height: 16px; }
+
+p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Links with 8-bit styling */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.1s ease;
+}
+
+a:hover {
+  color: var(--accent);
+  text-shadow: 1px 1px 0px var(--p8-1);
+}
+
+/* Images and media with pixelated rendering */
+img, video, canvas {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Custom 8-bit scrollbar */
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--p8-5);
+  border: 2px solid var(--p8-6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--p8-12);
+  border: 2px solid var(--p8-6);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--p8-10);
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: thick;
+  scrollbar-color: var(--p8-12) var(--p8-5);
+}
+
+/* Loading spinner with 8-bit styling */
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border: 2px solid var(--border);
+  position: relative;
+  animation: pixel-spin 1s linear infinite;
+}
+
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes pixel-spin {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(270deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 8-bit animations */
+@keyframes pixelBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes pixelBounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+@keyframes pixelPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Utility classes for 8-bit effects */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.crt {
+  position: relative;
+}
+
+.crt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 0.5px,
+    rgba(255, 255, 255, 0.03) 1px,
+    rgba(255, 255, 255, 0.03) 1px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pixel-corners {
+  --pc: 8px;
+  clip-path: polygon(
+    0 var(--pc),
+    var(--pc) 0,
+    calc(100% - var(--pc)) 0,
+    100% var(--pc),
+    100% calc(100% - var(--pc)),
+    calc(100% - var(--pc)) 100%,
+    var(--pc) 100%,
+    0 calc(100% - var(--pc))
+  );
+}
+
+.glitch {
+  animation: glitch 0.3s linear infinite;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -40,44 +283,85 @@ body {
   overflow: hidden;
 }
 
-/* Prose styles for article content */
+/* Prose styles for article content with 8-bit styling */
 .prose {
   color: var(--foreground);
   max-width: none;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .prose p {
   margin-bottom: 1em;
-  line-height: 1.6;
+  color: var(--foreground-muted);
 }
 
-.dark .prose {
-  color: #d1d5db;
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-top: 2em;
+  margin-bottom: 1em;
 }
 
-/* 3D Canvas optimizations */
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.prose a:hover {
+  color: var(--accent);
+  background: var(--p8-1);
+  padding: 2px 4px;
+}
+
+.prose code {
+  background: var(--p8-1);
+  color: var(--accent);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 16px;
+}
+
+.prose pre {
+  background: var(--p8-1);
+  border: 2px solid var(--border);
+  padding: 16px;
+  overflow-x: auto;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--primary);
+  background: var(--p8-1);
+  padding: 16px;
+  margin: 16px 0;
+  font-style: italic;
+}
+
+/* Canvas optimizations for 3D models */
 canvas {
   display: block;
   touch-action: none;
+  image-rendering: auto; /* Let 3D models render smoothly */
 }
 
-/* Backdrop blur support */
+/* Backdrop blur support with 8-bit twist */
 .backdrop-blur-sm {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  background: rgba(29, 43, 83, 0.8); /* p8-1 with opacity */
 }
 
-/* Gradient animations */
+/* 8-bit gradient animations */
 @keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .gradient-animate {
@@ -85,33 +369,114 @@ canvas {
   animation: gradient-shift 8s ease infinite;
 }
 
-/* Analysis page specific styles */
+/* 8-bit styled analysis cards */
 .analysis-card {
-  transition: all 0.3s ease;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  border: 2px solid var(--border);
+  background: var(--p8-1);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
 }
 
 .analysis-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
 }
 
-/* Sentiment color indicators */
+/* Sentiment color indicators with 8-bit styling */
 .sentiment-positive {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: var(--p8-11);
+  color: var(--p8-0);
+  border: 2px solid var(--p8-3);
+  box-shadow: 2px 2px 0px 0px var(--p8-3);
 }
 
 .sentiment-negative {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: var(--p8-8);
+  color: var(--p8-7);
+  border: 2px solid var(--p8-2);
+  box-shadow: 2px 2px 0px 0px var(--p8-2);
 }
 
 .sentiment-neutral {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
+  background: var(--p8-5);
+  color: var(--p8-7);
+  border: 2px solid var(--p8-6);
+  box-shadow: 2px 2px 0px 0px var(--p8-6);
 }
 
-/* Analysis button animations */
+/* 8-bit button */
+.btn-pixel {
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 16px;
+  transition: all 0.1s ease;
+  border: 2px solid var(--border);
+  padding: 12px 10px;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+}
+
+.btn-pixel:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
+  background: var(--accent, var(--p8-12));
+  color: var(--p8-0, #000);
+}
+
+.btn-pixel-event {
+  background: var(--p8-9);
+  color: var(--p8-0);
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+}
+
+.btn-pixel-event:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
+  background: var(--p8-4);
+  color: var(--p8-0);
+}
+
+.btn-pixel-secondary {
+  background: var(--p8-14);
+  color: var(--p8-0);
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+}
+
+.btn-pixel-secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
+  background: var(--p8-15);
+  color: var(--p8-0);
+}
+
+.btn-pixel-success {
+  background: var(--p8-11);
+  color: var(--p8-0);
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+}
+
+.btn-pixel-success:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
+  background: var(--p8-3);
+  color: var(--p8-0);
+}
+
+/* 8-bit button animations */
 .analysis-btn {
   position: relative;
   overflow: hidden;
+  border: 2px solid var(--border);
+  background: var(--primary);
+  color: var(--foreground);
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  text-transform: uppercase;
+  font-size: 10px;
+  padding: 12px 16px;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+  transition: all 0.1s ease;
 }
 
 .analysis-btn::before {
@@ -121,15 +486,27 @@ canvas {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255,236,39,0.3), transparent);
+  transition: left 0.3s ease;
+}
+
+.analysis-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.8);
+  background: var(--accent);
+  color: var(--p8-0);
 }
 
 .analysis-btn:hover::before {
   left: 100%;
 }
 
-/* Progress indicators */
+.analysis-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.8);
+}
+
+/* 8-bit progress indicators */
 .progress-ring {
   transform: rotate(-90deg);
 }
@@ -138,4 +515,72 @@ canvas {
   stroke-dasharray: 251.2;
   stroke-dashoffset: 251.2;
   transition: stroke-dashoffset 0.5s ease-in-out;
+  stroke: var(--primary);
+  stroke-width: 4;
+}
+
+/* 8-bit toast/notification styles */
+.toast-pixel {
+  background: var(--p8-1);
+  border: 2px solid var(--border);
+  color: var(--foreground);
+  padding: 16px;
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 16px;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.toast-pixel.success {
+  border-color: var(--p8-11);
+  background: var(--p8-3);
+}
+
+.toast-pixel.error {
+  border-color: var(--p8-8);
+  background: var(--p8-2);
+}
+
+.toast-pixel.warning {
+  border-color: var(--p8-9);
+  background: var(--p8-4);
+}
+
+/* Mobile responsiveness with 8-bit considerations */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+  
+  h1 { font-size: 18px; line-height: 24px; }
+  h2 { font-size: 16px; line-height: 22px; }
+  h3 { font-size: 14px; line-height: 20px; }
+  h4 { font-size: 12px; line-height: 18px; }
+  h5 { font-size: 10px; line-height: 16px; }
+  h6 { font-size: 8px; line-height: 14px; }
+  
+  .analysis-btn {
+    font-size: 8px;
+    padding: 8px 12px;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+}
+
+/* Print styles */
+@media print {
+  body::before {
+    display: none;
+  }
+  
+  .crt::before {
+    display: none;
+  }
+  
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
 }
