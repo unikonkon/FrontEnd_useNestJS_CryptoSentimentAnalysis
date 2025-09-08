@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { articlesService } from './components/api';
 import type { Article, SingleArticleResponse } from './components/api';
+import WalletBG, { CompactBitcoinModel } from './components/treeJS/walletBG';
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -29,7 +30,7 @@ export default function HomePage() {
       setArticles(response.data);
     } catch (err) {
       console.error('Failed to load articles:', err);
-      setError('ไม่สามารถโหลดบทความได้');
+      setError('ไม่สามารถโหลดบทความได้ ต่อ api ไม่สำเร็จ');
     } finally {
       setLoading(false);
     }
@@ -48,7 +49,7 @@ export default function HomePage() {
       await loadArticles();
     } catch (err) {
       console.error('Failed to ingest articles:', err);
-      setError('ไม่สามารถนำเข้าบทความได้');
+      setError('ไม่สามารถนำเข้าบทความได้ ต่อ api ไม่สำเร็จ');
     } finally {
       setIngestLoading(false);
     }
@@ -95,9 +96,9 @@ export default function HomePage() {
       <header className="bg-gray-900 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-white">
-              Crypto Sentiment Analysis
-            </h1>
+              <h1 className="text-3xl font-bold text-white">
+                Crypto Sentiment Analysis
+              </h1>
             <button
               onClick={handleIngestArticles}
               disabled={ingestLoading}
@@ -120,6 +121,44 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      {/* Hero Section with 3D Model */}
+      <section className="bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="text-white">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                วิเคราะห์ Sentiment
+                <br />
+                <span className="text-yellow-400">Crypto</span> ด้วย AI
+              </h2>
+              <p className="text-xl text-gray-300 mb-6">
+                ติดตามและวิเคราะห์ข่าวสาร Cryptocurrency ด้วยเทคโนโลยี AI 
+                เพื่อการตัดสินใจลงทุนที่ดีขึ้น
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-2xl font-bold text-yellow-400">{articles.length}</div>
+                  <div className="text-sm text-gray-300">บทความทั้งหมด</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-2xl font-bold text-green-400">AI</div>
+                  <div className="text-sm text-gray-300">วิเคราะห์อัตโนมัติ</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* 3D Bitcoin Model */}
+            <div className="flex justify-center">
+              <WalletBG 
+                height="300px" 
+                className="w-full max-w-md rounded-xl shadow-2xl bg-gradient-to-br from-black/20 to-transparent backdrop-blur-sm"
+                showControls={true}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Messages */}
       {(error || successMessage) && (
